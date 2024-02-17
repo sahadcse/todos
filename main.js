@@ -6,12 +6,14 @@ if (todoList.children.length === 0) {
   noTodo.style.display = "block";
 }
 
+// window.onload = function () {
+//   loadData();
+// };
+
 function addTask() {
   if (todoInput.value === "") {
     alert("Please enter a task");
   } else {
-    saveData();
-
     let task = document.createElement("li");
     task.style.display = "flex";
     task.style.alignItems = "center";
@@ -40,6 +42,8 @@ function addTask() {
     deleteButton.onclick = function () {
       if (confirm("Are you sure you want to delete this task?")) {
         task.remove();
+        // clearData();
+        clearLocalStorage();
         if (todoList.children.length === 0) {
           noTodo.style.display = "block";
         }
@@ -53,8 +57,8 @@ function addTask() {
     todoList.appendChild(task);
     noTodo.style.display = "none";
 
-    todoInput.value = "";
     saveData();
+    todoInput.value = "";
   }
 }
 
@@ -99,6 +103,7 @@ function loadData() {
       deleteButton.onclick = function () {
         if (confirm("Are you sure you want to delete this task?")) {
           task.remove();
+          clearLocalStorage();
           if (todoList.children.length === 0) {
             noTodo.style.display = "block";
           }
@@ -116,3 +121,15 @@ function loadData() {
 }
 
 loadData();
+
+function clearLocalStorage() {
+  // clear only deleted child from local storage
+  let tasks = [];
+  for (let i = 0; i < todoList.children.length; i++) {
+    let task = todoList.children[i].querySelector("span").innerHTML;
+    tasks.push(task);
+  }
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+// Clear data from local storage which task is deleted once by once
